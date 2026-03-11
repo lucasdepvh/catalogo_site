@@ -1,0 +1,37 @@
+<div class="preloader" style="display: none;">
+    <img src="../assets/images/logos/logo-icon.svg" alt="loader" class="lds-ripple img-fluid">
+  </div>
+    <div class="position-relative overflow-hidden radial-gradient min-vh-100 w-100">
+      <div class="position-relative z-3">
+        <div class="row">
+    <div class="col-xl-7 col-xxl-8 bg-light">
+
+      <div class="d-none d-xl-flex align-items-center justify-content-center" style="height: calc(100vh - 88px);">
+        <img src="https://bootstrapdemos.wrappixel.com/ample/dist/assets/images/backgrounds/loginbg.png" alt="" class="img-fluid" width="500">
+      </div>
+    </div>
+    <div class="col-xl-5 col-xxl-4">
+      <div class="authentication-login min-vh-100 bg-body row justify-content-center align-items-center p-4">
+        <div class="auth-max-width col-sm-8 col-md-6 col-xl-9">
+          <h2 class="mb-1 fs-7 fw-bolder">Welcome to Robmacav and Bomber</h2>
+          <p class=" mb-4">Your Admin Dashboard</p>
+
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="mb-3">
+           <%= f.label :email, class: "form-label" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "Enter Email Address" %>
+          </div>
+          <div class="mb-4">
+          <%= f.label :senha, class: "form-label" %>
+            <%= f.password_field :password, autofocus: true, autocomplete: "current-password", class: "form-control", placeholder: "Password" %>
+          </div>
+           <div class="form-group">
+          <%= f.submit "Log in", class: "btn btn-primary w-100 mb-4 rounded-2" %>
+        </div>
+      <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

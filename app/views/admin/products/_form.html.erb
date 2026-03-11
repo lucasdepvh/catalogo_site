@@ -1,0 +1,93 @@
+<%= form_with(model: [:admin, @product]) do |f| %>
+<div class="row mb-3">
+    <div class="col-12 col-sm-6 col-md-4 mb-3 mb-md-0">
+        <label class='' for='imgInp'>
+            <img src=<%= set_image_product_or_ilustration_src(@product) %> id='img-upload' class="img-fluid rounded"/>
+        </label>
+
+        <%= f.fields_for :images do |ff| %>
+            <div class="col-6 col-sm-6">
+                <%= ff.file_field :data, class: 'form-control d-none', id: 'imgInp', style: 'width:0;' %>
+            </div>
+        <% end %>
+    </div>
+    <div class="col-12 col-sm-6 col-md-8">
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12">
+                <%= f.label :title, "Título", class: 'mb-1' %>
+                <%= f.text_field :title, class: 'form-control', placeholder: 'Capacete' %>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12">
+                <%= f.label :price, "Preço", class: 'mb-1' %>
+                <%= f.text_field :price, value: number_to_currency(product.price, unit: "R$", separator: ",", delimiter: ".", precision: 2), class: 'form-control', placeholder: 'R$ 172.29' %>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12 col-sm-12">
+                <%= f.label :identification_code, "Códido de Identificação", class: 'mb-1' %>
+                <%= f.text_field :identification_code, class: 'form-control', placeholder: '007' %>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-12">
+                <%= f.label :category_id, "Categoria", class: 'mb-1' %>
+                <%= f.select :category_id, @categories, { include_blank: 'Selecione' }, class: 'form-control mb-2' %>
+                <%= link_to new_admin_category_path, target: '_blank' do %>
+                    <i class="bi bi-plus me-1"></i> Adicionar
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-12 col-sm-12">
+        <%= f.label :description, "Descrição", class: 'mb-1' %>
+        <%= f.text_area :description, class: 'form-control', placeholder: 'Capacete', rows: 5 %>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 d-flex justify-content-end flex-end ">
+        <%= link_to admin_products_path, class: 'btn btn-danger me-1' do %>
+            <i class="bi bi-house me-1"></i> Voltar
+        <% end %>
+        <%= button_tag(type: "submit", class: "btn btn-success") do %>
+            <i class="bi bi-floppy me-1"></i> Salvar
+        <% end %>
+    </div>
+</div>
+        <br>
+<% end %>
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#img-upload').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function limitImageSizeTo5MB(input) {
+        if(input.files[0].size > 5242880) {
+            alert("Insira arquivos de no máximo 5MB!");
+           input.value = "";
+        }
+    }
+
+    let imagePreview = document.querySelector("#imgInp");
+
+    document.addEventListener('turbo:load', function() {
+        imagePreview.addEventListener('change', function() {
+            readURL(this);
+            limitImageSizeTo5MB(this);
+        })
+    })    
+</script>

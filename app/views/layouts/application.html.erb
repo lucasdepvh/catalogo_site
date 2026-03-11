@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<style>
+    .carrinho-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.carrinho-item-texto {
+  margin-right: 10px;
+}
+</style>
+  <head>
+    <title>CatSite</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= render 'shared/topbar' %>
+    <%= yield %>
+    <%= render 'shared/footer' %>
+
+    <div id="carrinho" class="carrinho" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background-color: #f0f0f0; padding: 10px; border-radius: 5px; text-align: center;">
+    <div style="display: flex; align-items: center;">
+      <i class="bi bi-cart-fill" style="margin-right: 5px;"></i>
+      <h5 style="margin-bottom: 0;">Carrinho</h5>
+    </div>
+    <hr>
+    <div id="itensCarrinho"></div>
+    <button onclick="finalizarCompra()" class="btn btn-sm btn-success whatsapp-btn">
+      Enviar carrinho no WhatsApp
+      <i class="bi bi-whatsapp ms-2"></i>
+    </button>
+  </div>
+
+ 
+  <script>
+  function adicionarAoCarrinho(id, nome, preco) {
+  let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+  let produtoExistente = carrinho.find(item => item.id === id);
+
+  if (produtoExistente) {
+    produtoExistente.quantidade += 1;
+  } else {
+    carrinho.push({ id, nome, preco: parseFloat(preco).toFixed(2), quantidade: 1 });
+  }
+
+  localStorage.setItem('carrinho', JSON.stringify(carrinho));
+  atualizarCarrinho();
+}
+function atualizarCarrinho() {
+  const itensCarrinho = document.getElementById('itensCarrinho');
+  const carrinhoDiv = document.getElementById('carrinho');
+  itensCarrinho.innerHTML = '';
+
+  let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+  if (carrinho.length === 0) {
+    carrinhoDiv.style.display = 'none'; 
+    return; 
+  }
+
+  carrinhoDiv.style.display = 'block'; // Mostra o carrinho se houver produtos nele
+
+  carrinho.forEach(item => {
+    let div = document.createElement('div');
+    div.className = 'carrinho-item';
+
+    let texto = document.createElement('span');
+    texto.textContent = `${item.nome} - R$${parseFloat(item.preco.replace(',', '.')).toFixed(2).replace('.', ',')} x ${item.quantidade}`;
+    texto.className = 'carrinho-item-texto';
+
+    let btnRemover = document.createElement('button');
+    btnRemover.className = 'btn btn-sm btn-danger bi bi-trash';
+    btnRemover.onclick = () => removerDoCarrinho(item.id);
+
+    div.appendChild(texto);
+    div.appendChild(btnRemover);
+    itensCarrinho.appendChild(div);
+  });
+}
+
+  function removerDoCarrinho(id) {
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+    carrinho = carrinho.filter(item => item.id !== id);
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    atualizarCarrinho();
+  }
+
+function finalizarCompra() {
+  let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+  if (carrinho.length === 0) {
+    alert("Seu carrinho está vazio.");
+    return;
+  }
+
+  let mensagem = "Olá, gostaria de comprar os seguintes produtos:\n";
+  carrinho.forEach(item => {
+    let precoFormatado = item.preco.toString().replace('.', ',');
+    mensagem += `${item.nome} - R$${precoFormatado} x ${item.quantidade} und\n`;
+  });
+
+  let telefone = "5569992791505";
+  let url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, '_blank');
+}
+
+  document.addEventListener('DOMContentLoaded', atualizarCarrinho);
+
+  // Atualizar o carrinho
+    atualizarCarrinho();
+  </script>
+
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<style>
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pulse {
+    animation: pulse 1s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.1);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @media (max-width: 500px) and (max-height: 526px) {
+  #backButton {
+    float: right;
+  }
+}
+
+</style>
+<div class="container">
+  <div class="shadow-none position-relative overflow-hidden my-4">
+    <div class="d-sm-flex d-block justify-content-between align-items-center">
+      <h5 class="mb-0 fw-semibold text-uppercase">Detalhes do Produto</h5>
+      <%= link_to root_path, class: 'btn btn-sm btn-danger d-inline-block d-sm-inline-flex align-items-center', id: 'backButton' do %>
+      <i class="bi bi-arrow-left me-1"></i> Voltar
+      <% end %>
+    </div>
+  </div>
+  <div class="card shadow-none border mb-3">
+    <div class="card-body p-4">
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="item rounded-2 overflow-hidden card-image-product-details">
+            <%= image_tag set_image_product_or_ilustration_src(@product), class: 'img-fluid' %>
+          </div>
+        </div>
+        <div class="col-lg-8 mt-2">
+          <h4><%= @product.title %></h4>
+          <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ex arcu, tincidunt bibendum felis.</p>
+          <h6 class="fs-4 mb-0">
+            Valor: <%= number_to_currency(@product.price, unit: "R$ ", separator: ",", delimiter: ".", precision: 2) %>
+          </h6>
+          <div class="d-sm-flex align-items-center gap-6 pt-8 mb-7">
+            <button onclick="adicionarAoCarrinho(<%= @product.id %>, '<%= @product.title %>', <%= @product.price %>)" class="btn btn-sm btn-primary ms-2 pulse">
+              + Adicionar ao Carrinho
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card shadow-none border">
+    <div class="card-body p-4">
+      <h5>Descrição</h5>
+      <hr>
+      <p><%= @product.description %></p>
+    </div>
+  </div>
+  <%= render 'related_products' %>
+</div>

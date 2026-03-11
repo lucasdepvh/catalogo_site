@@ -1,0 +1,50 @@
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      margin-bottom: 1rem;
+    }
+  </style>
+<body>
+
+  <div class="container">
+    <div class="row">
+  <div class="col-md-11"></div> <!-- Div vazia para ocupar o restante da largura -->
+  <div class="col-md-1 text-end">
+    <%= link_to root_path, class: 'btn btn-sm btn-danger d-inline-block d-sm-inline-flex align-items-center', id: 'backButton' do %>
+      <i class="bi bi-arrow-left me-1"></i> Voltar
+    <% end %>
+  </div>
+        <h1>Quem Somos</h1>
+</div>
+    <p>Somos uma empresa comprometida em fornecer os melhores produtos e serviços aos nossos clientes. Nossa missão é...</p>
+    <p>Nossos valores incluem transparência, integridade e excelência em tudo o que fazemos.</p>
+    <h2>Nossa Equipe</h2>
+    <ul>
+      <li>Lucas - Dev</li>
+      <li>Robson - Dev</li>
+    </ul>
+    <h2>Nossa História</h2>
+    <p>Nossa empresa foi fundada em 20XX por Lucas e Robson com o objetivo de...</p>
+  </div>
+</body>
+</html>
