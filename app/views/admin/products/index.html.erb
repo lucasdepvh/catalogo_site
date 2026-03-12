@@ -39,9 +39,10 @@
         <table class="table table-hover text-nowrap mb-0">
             <thead>
                 <th class="col-2">Identificador</th>
-                <th class="col-4">Titulo</th>
+                <th class="col-3">Titulo</th>
                 <th class="col-2">Preço</th>
                 <th class="col-2">Categoria</th>
+                <th class="col-1 text-center">Cliques</th>
                 <th class="col-2 text-center">Ações</th>
             </thead>
             <tbody>
@@ -51,6 +52,9 @@
                     <td><%= product.title %></td>
                     <td><%= number_to_currency(product.price, unit: "R$", separator: ",", delimiter: ".") %></td>
                     <td><%= product.category.description %></td>
+                    <td class="text-center">
+                        <span class="badge bg-light text-dark border"><%= product.views_count %></span>
+                    </td>
                     <td class="text-center">
                         <%= link_to admin_product_path(product), class: 'btn btn-sm btn-primary' do %>
                             <i class="bi bi-eye"></i>

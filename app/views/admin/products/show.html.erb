@@ -3,6 +3,10 @@
         <h5 class="card-title mb-0"><%= "Produto ##{@product.id}" %></h5>
     </div>
     <div class="card-body">
+        <div class="alert alert-light border d-flex justify-content-between align-items-center">
+            <span class="mb-0 fw-semibold">Total de cliques (visualizacoes)</span>
+            <span class="badge text-bg-dark fs-6"><%= @product.views_count %></span>
+        </div>
         <%= render 'form', product: @product %>
     </div>
 </div>

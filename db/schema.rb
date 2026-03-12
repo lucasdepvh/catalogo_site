@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_04_042227) do
+ActiveRecord::Schema[7.0].define(version: 2026_03_11_234512) do
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -46,6 +46,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_04_042227) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "identification_code"
+    t.integer "views_count", default: 0, null: false
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 

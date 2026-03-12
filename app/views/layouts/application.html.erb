@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
-<style>
-    .carrinho-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.carrinho-item-texto {
-  margin-right: 10px;
-}
-</style>
   <head>
-    <title>CatSite</title>
+    <title>Fe Atelie</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -28,18 +16,25 @@
     <%= yield %>
     <%= render 'shared/footer' %>
 
-    <div id="carrinho" class="carrinho" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000; background-color: #f0f0f0; padding: 10px; border-radius: 5px; text-align: center;">
-    <div style="display: flex; align-items: center;">
-      <i class="bi bi-cart-fill" style="margin-right: 5px;"></i>
-      <h5 style="margin-bottom: 0;">Carrinho</h5>
+    <div id="carrinho" class="cart-floating" style="display: none;">
+      <div class="cart-header">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-cart-fill me-2"></i>
+          <h5 class="mb-0">Pedido</h5>
+        </div>
+        <span id="cartCounter" class="badge text-bg-dark">0 itens</span>
+      </div>
+      <hr class="my-2">
+      <div id="itensCarrinho" class="cart-items"></div>
+      <div class="cart-summary mt-2 mb-2">
+        <span>Subtotal:</span>
+        <strong id="cartSubtotal">R$ 0,00</strong>
+      </div>
+      <button onclick="finalizarCompra()" class="btn btn-sm btn-success w-100">
+        Enviar pedido no WhatsApp
+        <i class="bi bi-whatsapp ms-2"></i>
+      </button>
     </div>
-    <hr>
-    <div id="itensCarrinho"></div>
-    <button onclick="finalizarCompra()" class="btn btn-sm btn-success whatsapp-btn">
-      Enviar carrinho no WhatsApp
-      <i class="bi bi-whatsapp ms-2"></i>
-    </button>
-  </div>
 
  
   <script>
@@ -59,6 +54,8 @@
 function atualizarCarrinho() {
   const itensCarrinho = document.getElementById('itensCarrinho');
   const carrinhoDiv = document.getElementById('carrinho');
+  const cartSubtotal = document.getElementById('cartSubtotal');
+  const cartCounter = document.getElementById('cartCounter');
   itensCarrinho.innerHTML = '';
 
   let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
@@ -67,24 +64,33 @@ function atualizarCarrinho() {
     return; 
   }
 
-  carrinhoDiv.style.display = 'block'; // Mostra o carrinho se houver produtos nele
+  carrinhoDiv.style.display = 'block';
+  let subtotal = 0;
+  let totalItens = 0;
 
   carrinho.forEach(item => {
     let div = document.createElement('div');
     div.className = 'carrinho-item';
 
     let texto = document.createElement('span');
-    texto.textContent = `${item.nome} - R$${parseFloat(item.preco.replace(',', '.')).toFixed(2).replace('.', ',')} x ${item.quantidade}`;
+    const preco = parseFloat(item.preco.toString().replace(',', '.'));
+    texto.textContent = `${item.nome} x ${item.quantidade}`;
     texto.className = 'carrinho-item-texto';
 
     let btnRemover = document.createElement('button');
-    btnRemover.className = 'btn btn-sm btn-danger bi bi-trash';
+    btnRemover.className = 'btn btn-sm btn-outline-danger bi bi-trash';
     btnRemover.onclick = () => removerDoCarrinho(item.id);
 
     div.appendChild(texto);
     div.appendChild(btnRemover);
     itensCarrinho.appendChild(div);
+
+    subtotal += preco * item.quantidade;
+    totalItens += item.quantidade;
   });
+
+  cartSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
+  cartCounter.textContent = `${totalItens} item${totalItens > 1 ? 's' : ''}`;
 }
 
   function removerDoCarrinho(id) {
@@ -101,11 +107,15 @@ function finalizarCompra() {
     return;
   }
 
-  let mensagem = "Olá, gostaria de comprar os seguintes produtos:\n";
+  let total = 0;
+  let mensagem = "Ola, gostaria de comprar os seguintes itens de Prata 925:\n";
   carrinho.forEach(item => {
-    let precoFormatado = item.preco.toString().replace('.', ',');
-    mensagem += `${item.nome} - R$${precoFormatado} x ${item.quantidade} und\n`;
+    const precoNumerico = parseFloat(item.preco.toString().replace(',', '.'));
+    let precoFormatado = precoNumerico.toFixed(2).replace('.', ',');
+    mensagem += `- ${item.nome} | R$${precoFormatado} x ${item.quantidade}\n`;
+    total += precoNumerico * item.quantidade;
   });
+  mensagem += `\nSubtotal: R$${total.toFixed(2).replace('.', ',')}`;
 
   let telefone = "5569992791505";
   let url = `https://wa.me/${telefone}?text=${encodeURIComponent(mensagem)}`;

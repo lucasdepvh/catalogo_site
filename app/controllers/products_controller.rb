@@ -3,6 +3,8 @@ class ProductsController < ApplicationController
     
     def show
         @product = Product.find(params[:id])
+        Product.increment_counter(:views_count, @product.id)
+        @product.reload
         @relateds_products = Product.related_to(@product)[0..3]
     end
 end

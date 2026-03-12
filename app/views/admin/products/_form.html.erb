@@ -1,33 +1,44 @@
-<%= form_with(model: [:admin, @product]) do |f| %>
+<%= form_with(model: [:admin, @product], html: { multipart: true }) do |f| %>
+<% if @product.errors.any? %>
+<div class="alert alert-danger">
+    <h6 class="mb-2">Nao foi possivel salvar o produto:</h6>
+    <ul class="mb-0">
+        <% @product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
 <div class="row mb-3">
     <div class="col-12 col-sm-6 col-md-4 mb-3 mb-md-0">
-        <label class='' for='imgInp'>
+        <label for='imgInp' class="w-100">
             <img src=<%= set_image_product_or_ilustration_src(@product) %> id='img-upload' class="img-fluid rounded"/>
         </label>
 
-        <%= f.fields_for :images do |ff| %>
+        <%= f.fields_for :images, @product.images.first do |ff| %>
             <div class="col-6 col-sm-6">
                 <%= ff.file_field :data, class: 'form-control d-none', id: 'imgInp', style: 'width:0;' %>
             </div>
         <% end %>
+        <small class="text-muted d-block mt-2">Clique na imagem para trocar. Tamanho maximo: 5MB.</small>
     </div>
     <div class="col-12 col-sm-6 col-md-8">
         <div class="row mb-3">
             <div class="col-12 col-sm-12">
                 <%= f.label :title, "Título", class: 'mb-1' %>
-                <%= f.text_field :title, class: 'form-control', placeholder: 'Capacete' %>
+                <%= f.text_field :title, class: 'form-control', placeholder: 'Ex: Anel Coracao Vazado' %>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-12 col-sm-12">
                 <%= f.label :price, "Preço", class: 'mb-1' %>
-                <%= f.text_field :price, value: number_to_currency(product.price, unit: "R$", separator: ",", delimiter: ".", precision: 2), class: 'form-control', placeholder: 'R$ 172.29' %>
+                <%= f.number_field :price, step: 0.01, min: 0, class: 'form-control', placeholder: 'Ex: 89.90' %>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-12 col-sm-12">
-                <%= f.label :identification_code, "Códido de Identificação", class: 'mb-1' %>
-                <%= f.text_field :identification_code, class: 'form-control', placeholder: '007' %>
+                <%= f.label :identification_code, "Codigo de Identificacao", class: 'mb-1' %>
+                <%= f.text_field :identification_code, class: 'form-control', placeholder: 'ANL-001' %>
             </div>
         </div>
         <div class="row">
@@ -43,8 +54,8 @@
 </div>
 <div class="row mb-3">
     <div class="col-12 col-sm-12">
-        <%= f.label :description, "Descrição", class: 'mb-1' %>
-        <%= f.text_area :description, class: 'form-control', placeholder: 'Capacete', rows: 5 %>
+        <%= f.label :description, "Descricao", class: 'mb-1' %>
+        <%= f.text_area :description, class: 'form-control', placeholder: 'Descreva o produto, material, acabamento e diferencial comercial.', rows: 5 %>
     </div>
 </div>
 
@@ -61,33 +72,30 @@
         <br>
 <% end %>
 
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script>
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#img-upload').attr('src', e.target.result);
+    function setupImagePreview() {
+        const imageInput = document.querySelector("#imgInp");
+        const imageTag = document.querySelector("#img-upload");
+
+        if (!imageInput || !imageTag) return;
+
+        imageInput.addEventListener("change", function() {
+            const file = this.files && this.files[0];
+            if (!file) return;
+
+            if (file.size > 5242880) {
+                alert("Insira arquivos de no maximo 5MB.");
+                this.value = "";
+                return;
             }
-            
-            reader.readAsDataURL(input.files[0]);
-        }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                imageTag.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
     }
 
-    function limitImageSizeTo5MB(input) {
-        if(input.files[0].size > 5242880) {
-            alert("Insira arquivos de no máximo 5MB!");
-           input.value = "";
-        }
-    }
-
-    let imagePreview = document.querySelector("#imgInp");
-
-    document.addEventListener('turbo:load', function() {
-        imagePreview.addEventListener('change', function() {
-            readURL(this);
-            limitImageSizeTo5MB(this);
-        })
-    })    
+    document.addEventListener("turbo:load", setupImagePreview);
 </script>

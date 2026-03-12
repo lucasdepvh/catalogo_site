@@ -1,7 +1,15 @@
-<nav class="navbar-classic navbar navbar-expand-lg">
-    <div class="container">
-        <%= link_to root_path, class: 'navbar-brand' do %>
-            <img src="https://dashui.codescandy.com/dashuipro/assets/images/brand/logo/logo-2.svg" alt="Image">
-        <% end %>
+<nav class="navbar-classic navbar navbar-expand-lg site-topbar">
+  <div class="container">
+    <%= link_to root_path, class: 'navbar-brand brand-925' do %>
+      <%= image_tag "featelie.jpg", alt: "Fe Atelie", class: "brand-logo-image" %>
+      <span class="brand-text">
+        <strong>Fe Atelie</strong>
+        <small>Prata 925</small>
+      </span>
+    <% end %>
+
+    <div class="topbar-links">
+      <%= link_to "Login", new_admin_session_path, class: "topbar-link" %>
     </div>
+  </div>
 </nav>

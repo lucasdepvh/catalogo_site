@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CatSite</title>
+    <title>Fe Atelie | Admin</title>
       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -19,6 +19,12 @@
     <%= render 'shared/admin/topbar' %>
     <div class="bg-primary pt-12 pb-21"></div>
     <div class="container mt-n23">
+      <% if notice.present? %>
+        <div class="alert alert-success"><%= notice %></div>
+      <% end %>
+      <% if alert.present? %>
+        <div class="alert alert-danger"><%= alert %></div>
+      <% end %>
       <%= yield %>
     </div>
   </body>

@@ -2,6 +2,7 @@ class Admin::ProductsController < ApplicationController
   layout 'admin'
   
   before_action :set_product, only: %i[ show update edit destroy ]
+  before_action :set_categories, only: %i[show new create edit update]
 
   def index
     @q = Product.ransack(params[:q])
@@ -9,14 +10,12 @@ class Admin::ProductsController < ApplicationController
   end
 
   def show
-    @categories = Category.all.map{|c| [c.description, c.id]}
+    @product.images.build if @product.images.blank?
   end
 
   def new
     @product = Product.new
     @product.images.build
-
-    @categories = Category.all.map{|c| [c.description, c.id]}
   end
 
   def create
@@ -26,13 +25,14 @@ class Admin::ProductsController < ApplicationController
       if @product.save
         format.html { redirect_to admin_products_path, notice: 'Produto criado com sucesso!' }
       else
+        @product.images.build if @product.images.blank?
         format.html { render :new, status: :unprocessable_entity }
       end
     end
   end
 
   def edit
-    @categories = Category.all.map{|c| [c.description, c.id]}
+    @product.images.build if @product.images.blank?
   end
 
   def update
@@ -40,6 +40,7 @@ class Admin::ProductsController < ApplicationController
       if @product.update(product_params)
         format.html { redirect_to admin_products_path, notice: "Produto atualizado com sucesso." }
       else
+        @product.images.build if @product.images.blank?
         format.html { render :edit, status: :unprocessable_entity }
       end
     end
@@ -57,6 +58,10 @@ class Admin::ProductsController < ApplicationController
 
   def set_product
     @product = Product.find(params[:id])
+  end
+
+  def set_categories
+    @categories = Category.all.map { |c| [c.description, c.id] }
   end
 
   def product_params

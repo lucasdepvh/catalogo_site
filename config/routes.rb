@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :admins, path: '', path_names: { sign_in: 'iniciar-sessao', sign_out: 'sair' }
+  devise_for :admins, skip: [:registrations], path: '', path_names: { sign_in: 'iniciar-sessao', sign_out: 'sair' }
 
   namespace :admin, path: 'administracao' do 
     root "products#index"
+    resource :profile, only: [:edit, :update], path: 'perfil'
     resources :categories, path: 'categorias'
     resources :products, path: 'produtos'
   end
